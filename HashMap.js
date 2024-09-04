@@ -50,12 +50,14 @@ class HashMap {
   has(key) {
     const hash = this.hash(key);
     const index = hash % this.size;
-    if (this.buckets[index]["key"]) {
-      console.log("Key is found");
-      return true;
-    } else {
-      return false;
+    const bucket = this.buckets[index];
+
+    for (let entry of bucket) {
+      if (entry.key === key) {
+        return true;
+      }
     }
+    return false;
   }
 
   // remove(key) takes a key as an argument. If the given key is in the hash map, it should remove the entry with that key and return true. If the key isn’t in the hash map, it should return false.
@@ -63,7 +65,10 @@ class HashMap {
     if (this.has(key)) {
       const hash = this.hash(key);
       const index = hash % this.size;
-      this.buckets.splice(index, 1);
+      let bucket = this.buckets[index];
+      bucket = bucket.filter((entry) => {
+        return entry.key != key;
+      });
     } else {
       return false;
     }
