@@ -12,7 +12,6 @@ class HashMap {
   // hash(key) takes a key and produces a hash code with it.
   hash(key) {
     let hashCode = 0;
-
     const primeNumber = 31;
     for (let i = 0; i < key.length; i++) {
       hashCode = primeNumber * hashCode + key.charCodeAt(i);
@@ -26,10 +25,19 @@ class HashMap {
     const hash = this.hash(key);
     const index = hash % this.size;
     const bucket = this.buckets[index];
+
+    for (let entry of bucket) {
+      if (entry.key === key) {
+        entry.value = value;
+        return;
+      }
+    }
     bucket.push({ key, value });
 
-    console.log(this.capacity);
-    console.log(this.length() / this.size);
+    const loadFactor = this.length() / this.size;
+    if (loadFactor > this.capacity) {
+      this.grow();
+    }
   }
 
   // get(key) takes one argument as a key and returns the value that is assigned to this key. If a key is not found, return null.
@@ -69,6 +77,7 @@ class HashMap {
       bucket = bucket.filter((entry) => {
         return entry.key != key;
       });
+      this.buckets[index] = bucket;
     } else {
       return false;
     }
@@ -76,36 +85,40 @@ class HashMap {
 
   // length() returns the number of stored keys in the hash map.
   length() {
-    return Object.values(this.buckets)
-      .map((element) => (element != null ? element.key : null))
-      .filter((key) => key != null).length;
+    return this.buckets.flat().length;
   }
 
   // clear() removes all entries in the hash map.
   clear() {
-    this.buckets = Array(size).fill(null);
+    this.buckets = Array(this.size)
+      .fill(null)
+      .map(() => []);
   }
 
   //keys() returns an array containing all the keys inside the hash map.
-
-  //  return this.buckets.flat().map(entry => entry.key);
   keys() {
-    return Object.values(this.buckets)
-      .map((element) => (element != null ? element.key : null))
-      .filter((key) => key != null);
+    return this.buckets.flat().map((entry) => entry.key);
   }
 
   // values() returns an array containing all the values.
-
-  // return this.buckets.flat().map(entry => [entry.key, entry.value]);
   values() {
-    return Object.values(this.buckets)
-      .map((element) => (element != null ? element.value : null))
-      .filter((value) => value != null);
+    return this.buckets.flat().map((entry) => entry.value);
   }
 
   // entries() returns an array that contains each key, value pair. Example: [[firstKey, firstValue], [secondKey, secondValue]]
-  entries() {}
+  entries() {
+    return this.buckets.flat().map((entry) => [entry.key, entry.value]);
+  }
+
+  grow() {
+    this.size = this.size * 2;
+    const entries = this.entries();
+    this.clear();
+
+    for (let entry of entries) {
+      this.set(entry[0], entry[1]);
+    }
+  }
 }
 
 export default HashMap;

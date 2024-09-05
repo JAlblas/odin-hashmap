@@ -1,23 +1,19 @@
 import HashMap from "./HashMap.js";
 
-const hashMap = new HashMap();
-hashMap.set("TEST", "MY VALUE");
-hashMap.set("TEST2", "MY VALUE2");
-console.log(hashMap);
+const test = new HashMap();
 
-hashMap.remove("TEST");
-console.log(hashMap);
+test.set("apple", "red");
+test.set("banana", "yellow");
+test.set("carrot", "orange");
+test.set("dog", "brown");
+test.set("elephant", "gray");
+test.set("frog", "green");
+test.set("grape", "purple");
+test.set("hat", "black");
+test.set("ice cream", "white");
+test.set("jacket", "blue");
+test.set("kite", "pink");
+test.set("lion", "golden");
 
-/*
-hashMap.set("TEST", "MY VALUE");
-hashMap.set("TEST2", "MY VALU2E");
-
-console.log("GET: " + hashMap.get("TEST2"));
-
-console.log("Length: " + hashMap.length());
-
-console.log(hashMap.keys());
-console.log(hashMap.values());
-
-console.log(hashMap);
-*/
+test.set("moon", "silver");
+console.log(test.buckets);
